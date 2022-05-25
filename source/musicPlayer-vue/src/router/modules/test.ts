@@ -1,6 +1,6 @@
 import type { RouteRecordRaw } from 'vue-router';
 import { Layout } from '@/router/constant';
-const routeName = '路由名称';
+const routeName = 'myMusic';
 
 /**
  * @param name 路由名称, 必须设置,且不能重名
@@ -9,15 +9,15 @@ const routeName = '路由名称';
  * */
 const routes: Array<RouteRecordRaw> = [
   {
-    path: '/',
-    name: routeName,
+    path: '/myMusic',
+    name: routeName, 
     component: Layout,
     meta: {
       title: '测试',
     },
     children: [
       {
-        path: 'test',
+        path: 'list',
         name: `${routeName}_login`,
         meta: {
           title: '登录',
