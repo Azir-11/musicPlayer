@@ -12,7 +12,7 @@ public class DateUtils {
         return format.replace(" ", "").replace(":","").replace("-","");
 
     }
-    public String getDate(String format){
+    public static String getDate(String format){
         Date date=new Date();
         SimpleDateFormat dateFormat=new SimpleDateFormat(format);
         return dateFormat.format(date);
