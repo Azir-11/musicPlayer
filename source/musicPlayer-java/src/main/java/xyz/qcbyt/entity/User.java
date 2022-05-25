@@ -1,7 +1,9 @@
 package xyz.qcbyt.entity;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import org.hibernate.validator.constraints.Length;
 
+import javax.validation.constraints.Email;
 import javax.validation.constraints.NotBlank;
 import javax.validation.constraints.NotNull;
 import java.util.Date;
@@ -16,16 +18,23 @@ public class User {
     @Length(min = 6, max = 10,message = "密码⻓度⾄少6位但不超过10位!")
     @NotNull
     private String password;
-    private Integer role;
+    private Integer role;//用户权限 默认 0
+    @Email(message = "邮箱格式不正确")
+    @Length(min = 15,max = 20,message = "邮箱至少15位,最多20位")
     private String email;
-    private String profile;
-    private Date registertime;
-    private Integer totallogin;
+    private String profile;//用户简介
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date registertime;//注册时间
+    private Integer totallogin;//总共登录天数
+
+    @JsonFormat(pattern = "yyyy-MM-dd")
+    private Date recentlogin;//用户最近一次登录时间
 
     public User() {
     }
 
-    public User(Integer id, String username, String password, Integer role, String email, String profile, Date registertime, Integer totallogin) {
+    public User(Integer id, String username, String password, Integer role, String email, String profile, Date registertime, Integer totallogin, Date recentlogin) {
         this.id = id;
         this.username = username;
         this.password = password;
@@ -34,6 +43,15 @@ public class User {
         this.profile = profile;
         this.registertime = registertime;
         this.totallogin = totallogin;
+        this.recentlogin = recentlogin;
+    }
+
+    public Date getRecentlogin() {
+        return recentlogin;
+    }
+
+    public void setRecentlogin(Date recentlogin) {
+        this.recentlogin = recentlogin;
     }
 
     public Integer getId() {
@@ -111,6 +129,7 @@ public class User {
                 ", profile='" + profile + '\'' +
                 ", registertime=" + registertime +
                 ", totallogin=" + totallogin +
+                ", recentlogin=" + recentlogin +
                 '}';
     }
 }
