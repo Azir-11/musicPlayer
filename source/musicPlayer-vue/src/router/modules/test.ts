@@ -12,6 +12,7 @@ const routes: Array<RouteRecordRaw> = [
     path: '/myMusic',
     name: routeName, 
     component: Layout,
+    redirect:'/Home',
     meta: {
       title: '测试',
     },
@@ -24,6 +25,39 @@ const routes: Array<RouteRecordRaw> = [
         },
         component: () => import('@/views/login/login.vue'),
       },
+      {
+        path: 'Home',
+        name: `Home`,
+        meta: {
+          title: '首页',
+        },
+        component: () => import('@/layout/Main/Main.vue'),
+      },
+      {
+        path: 'music',
+        name: `music`,
+        meta: {
+          title: '音乐',
+        },
+        component: () => import('@/layout/Main/Music/music.vue'),
+      },
+      {
+        path: 'singer',
+        name: `singer`,
+        meta: {
+          title: '歌手',
+        },
+        component: () => import('@/layout/Main/singer/singer.vue'),
+      },
+      {
+        path: 'upload',
+        name: `upload`,
+        meta: {
+          title: '上传',
+        },
+        component: () => import('@/layout/Main/upload/upload.vue'),
+      },
+      
     ],
   },
 ];
