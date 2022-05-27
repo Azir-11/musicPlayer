@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace为命名空间，应该是mapper接口的全称-->
+<mapper namespace="xyz.qcbyt.mapper.UserMapper">
+<!--    根据某个条件查询user-->
+    <select id="findOneUser" resultType="xyz.qcbyt.entity.User" >
+        select * from user
+            <where>
+                <if test="id!=null and id!='' and id!=0">
+                    id=#{id}
+                </if>
+                <if test="username!=null and username!=''">
+                    username=#{username}
+                </if>
+                <if test="role!=null and role!=''">
+                    `role`=#{role}
+                </if>
+                <if test="registertime!=null and registertime!=''">
+                    registertime=#{registertime}
+                </if>
+
+            </where>
+    </select>
+</mapper>
