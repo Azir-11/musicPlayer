@@ -2,22 +2,22 @@
     <h1>Music</h1>
     <!-- 菜单 -->
     <ul class="menu" ref="V1">
-        <li @click="Home">
+        <li @click="   route('/', 'display:block' )">
             <el-icon style="color: #fff;background-color: red">
                 <VideoPlay />
             </el-icon>首页
         </li>
-        <li @click="music">
+        <li @click=" route('/music', 'display:none')">
             <el-icon>
                 <Headset />
             </el-icon>音乐
         </li>
-        <li @click="singer">
+        <li @click="route('/singer', 'display:none')">
             <el-icon>
                 <User />
             </el-icon>歌手
         </li>
-        <li @click="upload">
+        <li @click="route('/upload', 'display:none')">
             <el-icon>
                 <Eleme />
             </el-icon>上传
@@ -59,33 +59,13 @@ onMounted(() => {
     }
 
 })
-
-const Home = () => {
+const route = (path: string, data: string, ) => {
     router.push({
-        path: '/',
+        path: path,
+        query: {
+            data: data
+        }
     })
-    useminStroe.$state.display = "display:block"
-}
-const music = () => {
-    router.push({
-        path: '/music',
-
-    })
-    useminStroe.$state.display = "display:none"
-}
-const singer = () => {
-    router.push({
-        path: '/singer',
-
-    })
-    useminStroe.$state.display = "display:none"
-}
-const upload = () => {
-    router.push({
-        path: '/upload',
-
-    })
-    useminStroe.$state.display = "display:none"
 }
 
 </script>

@@ -1,34 +1,49 @@
 <template>
+
     <!-- 版心 -->
     <el-container class="common-layout">
-    <el-container>  <el-aside width="130px">
-            <Aside></Aside>
-        </el-aside>
-        <el-main style="padding: 0;">
-            <RouterView></RouterView>
-            <!-- 单独拿出来因为跳转路由这个音乐会停止 -->
-             <div class="Home" :style="useminStroe.$state.display" >
-                <Home></Home>
+
+        <el-container>
+            <el-aside width="130px">
+                <Aside></Aside>
+            </el-aside>
+            <el-main style="padding: 0;">
+                <!-- 右边头部 -->
+                <el-container class="header">
+                    <Header></Header>
+                </el-container>
+                <!-- main -->
+                <RouterView></RouterView>
+                <!-- 单独拿出来因为跳转路由这个音乐会停止 -->
+                <div class="Home" :style="(route.query.data as string)">
+                    <Home></Home>
+                </div>
+            </el-main>
+            <!-- 三角形 -->
+            <div class="triangle">
             </div>
-        </el-main>
-        <!-- 三角形 -->
-        <div class="triangle">
-        </div></el-container>
-       <!-- 底部播放 -->
-         <el-footer class="Player" :style="useminStroe.isdisplay" >11111</el-footer> 
+        </el-container>
+        <!-- 底部播放 -->
+        <el-footer class="Player" :style="route.query.data == 'display:block' ? 'display:none' : 'display:block'"><Footer></Footer>
+        </el-footer>
     </el-container>
-   
-      
-    
+
+
+
 
 </template>
-<script setup lang='ts'>
+<script lang="ts" setup>
 import Aside from './Aside/Aside.vue';
 import Home from './Main/Home/Home.vue';
 import { useCounterStore } from '@/stores/counter';
+import { useRoute } from 'vue-router';
+import { onMounted, ref } from 'vue';
+import Header from './Header/Header.vue';
+import Footer from './Footer/footer.vue';
+
 // 数据共享,控制display
-const useminStroe=useCounterStore()
-console.log(2222,useminStroe.$state.PlayerDisplay) 
+
+let route = useRoute()
 </script>
 <style scoped>
 .common-layout {
@@ -61,15 +76,24 @@ console.log(2222,useminStroe.$state.PlayerDisplay)
     position: absolute;
     z-index: 999;
     width: 100%;
-    height: 100%;
-    background-color:#ebeaf9 ;
-    
+    height: 90%;
+    background-color: #ebeaf9;
+
 }
-.Player{
+
+.Player {
+    width: 100%;
+    height: 100%;
     position: absolute !important;
     width: 100%;
     height: 10%;
     bottom: 0;
-    background-color:#f6f6f8 ;
+    background-color: #f6f6f8;
+}
+
+.header {
+    width: 100%;
+    height: 10%;
+
 }
 </style>

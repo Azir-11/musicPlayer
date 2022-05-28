@@ -1,4 +1,8 @@
 <template  >
+   
+   <!-- 主页 -->
+    
+    
     <span class="left">
         <!-- 歌词部分 -->
         <div class="profile">
@@ -13,7 +17,9 @@
             <Player></Player>
         </div>
         <!-- 3大盒子功能 -->
-     <div class="function"><Function></Function></div>
+        <div class="function">
+            <Function></Function>
+        </div>
     </span>
     <span class="right">2</span>
 </template>
@@ -95,7 +101,7 @@ const load = () => {
     position: absolute;
     width: 40%;
     height: 45%;
-    top: 13%;
+    top: 2%;
     border: 1px solid black;
 }
 
@@ -127,17 +133,18 @@ const load = () => {
 .Player {
     position: absolute;
     right: 0;
-    top: 8%;
+    top: 1%;
     width: 60%;
     height: 55%;
     border: 1px solid black;
 }
+
 /* 功能3大盒子 */
-.function{
+.function {
     position: absolute;
     width: 100%;
     height: auto;
-    top: 65%;
+    top: 59%;
     z-index: 999;
 }
 </style>
