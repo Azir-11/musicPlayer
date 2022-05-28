@@ -48,12 +48,13 @@ public class UserServiceImpl implements UserService {
             try {
                 //用户登录的时候 更新用户最近一次 登录时间
                 String p1="";String date=""; Integer role=null;
+                Date logindate=new Date();
                 if(userlogin.getTotallogin()==0 ){
-                    Date logindate=new Date();
+
                     userMapper.updateRecentLogin(userlogin.getId(),userlogin.getTotallogin()+1,new Date());
-                }else if(userlogin.getRecentlogin().getYear()==new Date().getYear()&&
-                        userlogin.getRecentlogin().getMonth()==new Date().getMonth()&&
-                        userlogin.getRecentlogin().getDay()==new Date().getDay()
+                }else if(userlogin.getRecentlogin().getYear()==logindate.getYear()&&
+                        userlogin.getRecentlogin().getMonth()==logindate.getMonth()&&
+                        userlogin.getRecentlogin().getDay()==logindate.getDay()
                 ){
                     userMapper.updateRecentLogin(userlogin.getId(),userlogin.getTotallogin(),new Date());
                 }
