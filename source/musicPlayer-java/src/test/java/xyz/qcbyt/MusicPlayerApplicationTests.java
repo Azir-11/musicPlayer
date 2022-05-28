@@ -13,7 +13,9 @@ class MusicPlayerApplicationTests {
 
     @Test
     void contextLoads() throws ParseException {
-
+        String filename="周杰伦-《花海》.mp3";
+        String preName=filename.substring(0,filename.lastIndexOf("."));
+        System.out.println(preName);
     }
 
 }
