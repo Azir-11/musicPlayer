@@ -10,10 +10,12 @@ public class Song {
     private String  lrcurl;   //歌词文件地址
     private String  coverimg; //歌曲封面图片 地址
 
+    private Boolean likestatus;
+
     public Song() {
     }
 
-    public Song(Integer id, String musicname, String singername, String albumname, Integer duration, String songurl, String lrcurl, String coverimg) {
+    public Song(Integer id, String musicname, String singername, String albumname, Integer duration, String songurl, String lrcurl, String coverimg, Boolean likestatus) {
         this.id = id;
         this.musicname = musicname;
         this.singername = singername;
@@ -22,6 +24,15 @@ public class Song {
         this.songurl = songurl;
         this.lrcurl = lrcurl;
         this.coverimg = coverimg;
+        this.likestatus = likestatus;
+    }
+
+    public Boolean getLikestatus() {
+        return likestatus;
+    }
+
+    public void setLikestatus(Boolean likestatus) {
+        this.likestatus = likestatus;
     }
 
     public Integer getId() {
@@ -95,10 +106,11 @@ public class Song {
                 ", musicname='" + musicname + '\'' +
                 ", singername='" + singername + '\'' +
                 ", albumname='" + albumname + '\'' +
-                ", duration='" + duration + '\'' +
+                ", duration=" + duration +
                 ", songurl='" + songurl + '\'' +
                 ", lrcurl='" + lrcurl + '\'' +
                 ", coverimg='" + coverimg + '\'' +
+                ", likestatus=" + likestatus +
                 '}';
     }
 }
