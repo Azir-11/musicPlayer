@@ -19,6 +19,7 @@ import java.io.IOException;
  *
  */
 @RestController
+@CrossOrigin
 public class FileUploadController {
     @Autowired
     private FileUploadService fileUploadService;

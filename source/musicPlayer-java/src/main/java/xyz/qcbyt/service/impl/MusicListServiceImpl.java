@@ -8,6 +8,7 @@ import xyz.qcbyt.entity.UserLoveMusic;
 import xyz.qcbyt.mapper.MusicListMapper;
 import xyz.qcbyt.service.MusicListService;
 
+import java.util.Date;
 import java.util.List;
 @Service
 public class MusicListServiceImpl implements MusicListService {
@@ -30,8 +31,8 @@ public class MusicListServiceImpl implements MusicListService {
     }
     //联表查询查询用户 喜欢的歌曲
     @Override
-    public List<UserLoveMusic> selectAllLoverMusic() {
-        List<UserLoveMusic> userLoveMusics = musicListMapper.selectAllLoverMusic();
+    public List<UserLoveMusic> selectAllLoverMusic(Integer id) {
+        List<UserLoveMusic> userLoveMusics = musicListMapper.selectAllLoverMusic(id);
         for (UserLoveMusic userLoveMusic: userLoveMusics) {
             String songurl = userLoveMusic.getSong().getSongurl();
             String lrcurl = userLoveMusic.getSong().getLrcurl();
@@ -49,6 +50,33 @@ public class MusicListServiceImpl implements MusicListService {
         Song oneMusic = musicListMapper.findOneMusic(id);
         if(oneMusic!=null){
             return oneMusic;
+        }
+        return null;
+    }
+    //添加喜欢的歌曲
+    @Override
+    public Integer addLoveSong(UserLoveMusic loveMusic) {
+        if(loveMusic!=null){
+            loveMusic.setLovemoment(new Date());
+            return musicListMapper.addLoveSong(loveMusic);
+        }
+        return null;
+    }
+    //添加喜欢的歌曲的时候 去重
+    @Override
+    public UserLoveMusic selectLoveSong(Integer musicid,Integer userid) {
+        if (musicid!=null && userid!=null){
+            return musicListMapper.selectLoveSong(musicid,userid);
+        }
+        return null;
+    }
+
+    @Override
+    public Integer cancelLikeSong(Integer id) {
+        Integer res = musicListMapper.cancelLikeSong(id);
+        System.out.println(res);
+        if (res!=null &&res!=0){
+            return 1;
         }
         return null;
     }

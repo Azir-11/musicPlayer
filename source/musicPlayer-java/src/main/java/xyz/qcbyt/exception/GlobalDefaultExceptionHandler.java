@@ -13,6 +13,8 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+
+import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 import xyz.qcbyt.utils.Result;
 
 import javax.servlet.http.HttpServletRequest;
@@ -77,4 +79,10 @@ public class GlobalDefaultExceptionHandler {
         return Result.fail(400,"莫传空文件");
     }
 
+
+//    @ExceptionHandler(DefaultHandlerExceptionResolver.class)
+//    public Result DefaultHandlerExceptionResolver(DefaultHandlerExceptionResolver e) {
+//        logger.error("别传控制了ovo", e);
+//        return Result.fail(400,"莫传空值");
+//    }
 }
