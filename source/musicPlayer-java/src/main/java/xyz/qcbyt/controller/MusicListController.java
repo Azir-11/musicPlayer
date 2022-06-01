@@ -3,15 +3,14 @@ package xyz.qcbyt.controller;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.CrossOrigin;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolver;
 import xyz.qcbyt.entity.Song;
 import xyz.qcbyt.entity.UserLoveMusic;
 import xyz.qcbyt.service.MusicListService;
 import xyz.qcbyt.utils.Result;
 
+import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.List;
@@ -26,28 +25,29 @@ import java.util.Map;
 public class MusicListController {
     @Autowired
     private MusicListService musicListService;
-
     /**
-     * 显示用户 是否喜欢功能
+     * 显示用户 是否喜欢功能(音乐列表页)
      * @return
      */
     @RequestMapping("/findAll")
-    public Result findAll(){
-        List<Song> userLoveMusic = musicListService.findAllMusic(); //用户喜欢的所有音乐
-        List<UserLoveMusic> allMusic = musicListService.selectAllLoverMusic();     //服务器的所有音乐（公共资源）
+    public Result findAll(Integer id){
+        List<Song> userLoveMusic = musicListService.findAllMusic(); //服务器的所有音乐（公共资源）
+        List<UserLoveMusic> allMusic = musicListService.selectAllLoverMusic(id);     //用户喜欢的所有音乐
 
         for (int i = 0; i <userLoveMusic.size() ; i++) {
             for (int j = 0; j <allMusic.size() ; j++) {
                 if(userLoveMusic.get(i).getId().equals(allMusic.get(j).getMusicid())){
                     userLoveMusic.get(i).setLikestatus(true);
+                }else {
+                    userLoveMusic.get(i).setLikestatus(false);
                 }
             }
         }
         return Result.succ(userLoveMusic);
     }
     //返回 我喜欢的歌曲 的 所有数据 返回值list
-    public List<UserLoveMusic> findAllLove(){
-        return musicListService.selectAllLoverMusic();
+    public List<UserLoveMusic> findAllLove(Integer id){
+        return musicListService.selectAllLoverMusic(id);
     }
 
     //返回一首歌的音乐的url 和 歌词
@@ -69,7 +69,38 @@ public class MusicListController {
 
             return Result.succ(map) ;
         }
-
         return Result.fail("操作失败",map);
+    }
+    /**
+     *  返回用户 喜欢的歌曲的 (个人喜欢 页面)
+     */
+    @RequestMapping("/mylovesong")
+    public Result UserLoveSong(Integer id){
+        return Result.succ(musicListService.selectAllLoverMusic(id));
+    }
+
+   /**
+   * 用户 点击喜欢，把喜欢的歌曲添加 到我的喜欢里面
+   */
+    @RequestMapping("/love")
+    public Result addLoveSong(@RequestBody UserLoveMusic loveMusic){
+        //用户喜欢一首歌，要先判断 是否已经 喜欢过了
+        UserLoveMusic userLoveMusic = musicListService.selectLoveSong(loveMusic.getMusicid(), loveMusic.getUserid());
+        if(userLoveMusic==null){
+            Integer integer = musicListService.addLoveSong(loveMusic);
+            if(integer!=null){
+                return Result.succ(200,"添加成功");
+            }
+        }
+        return Result.fail(400,"操作失败");
+    }
+
+    @RequestMapping("/cancel")
+    public Result cancelLoveSong(@RequestParam @Valid Integer id){
+        Integer res = musicListService.cancelLikeSong(id);
+        if(res!=null){
+            return Result.succ(200,"删除成功");
+        }
+        return Result.fail(400,"操作失败");
     }
 }

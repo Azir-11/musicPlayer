@@ -20,10 +20,11 @@
             <result column="songurl" property="songurl"/>
             <result column="lrcurl" property="lrcurl"/>
             <result column="coverimg" property="coverimg"/>
+            <result column="likestatus" property="likestatus"/>
         </association>
     </resultMap>
 
     <select id="selectAllLoverMusic" resultMap="findAllLoverMusic">
-        select * from `personlove` p inner join song s on p.musicid=s.id
+        select * from `personlove` p inner join song s on p.musicid=s.id where p.userid=#{id}
     </select>
 </mapper>

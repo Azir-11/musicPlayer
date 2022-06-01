@@ -4,9 +4,9 @@
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace为命名空间，应该是mapper接口的全称-->
 <mapper namespace="xyz.qcbyt.mapper.FileUploadMapper">
-<!--    文件上传的 对象属性 动态输入-->
+<!--    文件上传的 对象属性 动态输入  (上传到审核页)-->
     <insert id="addSong" parameterType="xyz.qcbyt.entity.Song">
-        insert into song
+        insert into auditmusic
         <trim prefix="(" suffix=")" suffixOverrides=",">
             <if test="musicname !=null and musicname!=''">
                 musicname,
@@ -28,6 +28,9 @@
             </if>
             <if test="coverimg !=null and coverimg!=''">
                 coverimg,
+            </if>
+            <if test="userid !=null and userid!=''">
+                userid,
             </if>
         </trim>
         <trim prefix="values (" suffix=")" suffixOverrides=",">
@@ -51,6 +54,9 @@
             </if>
             <if test="coverimg !=null and coverimg!=''">
                 #{coverimg,jdbcType=VARCHAR},
+            </if>
+            <if test="userid !=null and userid!=''">
+                #{userid,jdbcType=INTEGER},
             </if>
         </trim>
     </insert>
