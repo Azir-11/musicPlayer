@@ -6,13 +6,11 @@ import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import xyz.qcbyt.mapper.UserMapper;
 import xyz.qcbyt.entity.User;
+import xyz.qcbyt.mapper.UserMapper;
 import xyz.qcbyt.service.UserService;
-import xyz.qcbyt.utils.DateUtils;
 import xyz.qcbyt.utils.JwtUtils;
 import xyz.qcbyt.utils.Result;
-
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -23,7 +21,6 @@ import java.util.Map;
 public class UserServiceImpl implements UserService {
     @Autowired
     private UserMapper userMapper;
-
     @Override
     public Integer register(User user) {
         User user1 = userMapper.registerUnique(user.getUsername());
@@ -34,7 +31,6 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
-
     @Override
     public User registerUnique(String username) {
         return userMapper.registerUnique(username);
@@ -110,5 +106,21 @@ public class UserServiceImpl implements UserService {
         return userMapper.updateRecentLogin(id, totallogin, recentlogin);
     }
 
+    @Override
+    public Integer createLove(String tablename){
+        if (tablename!=null && !tablename.equals("")) {
+            userMapper.createLove(tablename);
+            return 1;
+        }
+        return 0;
+    }
+    @Override
+    public Integer createPlaylist(String tablename){
+        if (tablename!=null && !tablename.equals("")){
+            userMapper.createPlaylist(tablename);
+            return 1;
+        }
+        return 0;
+    }
 
 }
