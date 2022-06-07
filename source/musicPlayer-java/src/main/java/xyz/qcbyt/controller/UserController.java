@@ -1,44 +1,32 @@
 package xyz.qcbyt.controller;
-
-import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 import xyz.qcbyt.entity.User;
 import xyz.qcbyt.service.UserService;
 import xyz.qcbyt.utils.Result;
-
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
 import javax.validation.Valid;
-import javax.validation.constraints.NotNull;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-@CrossOrigin
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/reg")
 public class UserController {
     @Autowired
     private UserService service;
-
 //    @RequiresAuthentication 该注解用于需要 认证之后才能访问
     @PostMapping("/register")
     public Result register( @RequestBody @Valid User user){
-        if(service.register(user)!=null){
+        if(service.register(user)!=null){ //如果没注册过，才让注册
+            service.createLove(user.getUsername()+"_love");     //根据用户名创建一个 个人喜欢的表
+            service.createPlaylist(user.getUsername()+"_playlist"); //根据用户名创建一个 歌单
             return Result.succ(200,"注册成功");
         }
        return Result.fail(400,"注册失败,用户名已存在");
     }
-
     //用户登录，并生成token
     @PostMapping("/login")
-    public Map<String,Object> UserLogin(@RequestBody User user,
-                                        HttpServletRequest request,
-                                        HttpServletResponse response){
+    public Map<String,Object> UserLogin(@RequestBody User user){
         Result userlogin = service.userlogin(user);
         Map<String,Object> map=new HashMap<>();
         if(userlogin!=null){
@@ -51,19 +39,6 @@ public class UserController {
         map.put("code",400);
         return map;
     }
-
-//    //用户退出登录
-//    @RequiresAuthentication
-//    @PostMapping("loginout")
-//    public Result loginout(HttpServletRequest request){
-//        System.out.println("-------token:  "+request.getHeader("token"));
-//        Subject subject = SecurityUtils.getSubject();
-//        //注销
-//        subject.logout();
-//        System.out.println("-------token:  "+request.getHeader("token"));
-//        return Result.succ("您已退出登录");
-//    }
-
     @RequestMapping("/findAllUser")
     public List<User> findallUser(){
         return service.findAllUser();

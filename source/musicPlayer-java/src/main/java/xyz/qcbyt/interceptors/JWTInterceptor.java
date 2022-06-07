@@ -28,18 +28,18 @@ public class JWTInterceptor implements HandlerInterceptor {
             map.put("msg","签名不一致");
         }catch (TokenExpiredException e) {
             e.printStackTrace();
-            map.put("msg","token失效");
+            map.put("msg","token失效 或无 token");
         }catch (AlgorithmMismatchException e) {
             e.printStackTrace();
             map.put("msg","算法不一致");
-        }catch (InvalidClaimException e) {
+        }catch (InvalidClaimException e){
             e.printStackTrace();
             map.put("msg","payload失效");
-        }catch (Exception e){
-            e.printStackTrace();
-            System.out.println("null值-----");
-            map.put("msg","无token,非法的访问");
-        }
+        }     //catch (Exception e){
+//            e.printStackTrace();
+//            System.out.println("null值-----");
+//            map.put("msg","无token,非法的访问");
+//        }
         map.put("state",false);//设置状态
         //将map转为json
         String json = new ObjectMapper().writeValueAsString(map);

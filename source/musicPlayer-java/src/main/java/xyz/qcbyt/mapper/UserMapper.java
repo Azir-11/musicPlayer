@@ -6,10 +6,13 @@ import xyz.qcbyt.entity.User;
 import java.util.Date;
 import java.util.List;
 
+/**
+ * 用户登录 注册 功能
+ */
 @Mapper
 public interface UserMapper {
     //注册用户
-    @Insert("insert into user (username,password,email,registertime) values(#{username},#{password},#{email},#{registertime}) ")
+    @Insert("insert into user (name,username,password,sex,phone,email,profile,registertime) values(#{name},#{username},#{password},#{sex},#{phone},#{email},#{profile},#{registertime}) ")
     Integer register(User user);
     //注册判断用户名是否重复
     @Select("select * from user where username=#{username}")
@@ -30,5 +33,9 @@ public interface UserMapper {
     @Update("update user set totallogin=#{totallogin},recentlogin=#{recentlogin} where id=#{id}")
     Integer updateRecentLogin(Integer id,Integer totallogin,Date recentlogin);
 
-    
+    //用户注册的时候创建一个用户喜欢的表
+    void createLove(@Param("tablename") String tablename);
+
+    //创建一个歌单
+    Integer createPlaylist(@Param("tablename")String tablename);
 }
