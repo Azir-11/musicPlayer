@@ -43,3 +43,16 @@ export const RedirectRoute: AppRouteRecordRaw = {
     },
   ],
 };
+//注册
+
+export const RegisterRoute: AppRouteRecordRaw = {
+  path: '/Register',
+  name: 'Register',
+  component: () => import('@/views/login/register.vue'),
+  meta: {
+    title: 'Register',
+    hideBreadcrumb: true,
+  },
+};
+
+

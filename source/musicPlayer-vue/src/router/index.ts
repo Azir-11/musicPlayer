@@ -2,6 +2,7 @@ import type { App } from 'vue';
 import { createRouter, createWebHashHistory  } from 'vue-router';
 import type { RouteRecordRaw  } from 'vue-router';
 import { RedirectRoute } from '@/router/base';
+import{RegisterRoute} from '@/router/base';
 import { createRouterGuards } from './router-guards';
 
 const modules = import.meta.globEager('./modules/**/*.ts');
@@ -29,8 +30,9 @@ export const LoginRoute: RouteRecordRaw = {
   },
 };
 
+
 //普通路由 无需验证权限
-export const constantRouter: any[] = [LoginRoute, RedirectRoute, ...routeModuleList];
+export const constantRouter: any[] = [LoginRoute, RedirectRoute,RegisterRoute, ...routeModuleList];
 
 console.log(constantRouter);
 
@@ -47,5 +49,22 @@ export function setupRouter(app: App) {
   // 创建路由守卫
   createRouterGuards(router);
 }
+
+router.beforeEach((to, from, next) => {
+
+  if (to.path == '/login' || to.path == '/register') {
+      next();
+  } else {
+      const Token = sessionStorage.getItem('Token') // 获取token
+      // token不存在
+      if (Token === null || Token === '') {
+          alert('您还没有登录，请先登录');
+          next('/login');
+      } else {
+          next();
+      }
+  }
+});
+
 
 export default router;
