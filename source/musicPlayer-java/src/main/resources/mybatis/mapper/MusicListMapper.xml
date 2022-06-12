@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<!-- namespace为命名空间，应该是mapper接口的全称-->
+<mapper namespace="xyz.qcbyt.mapper.MusicListMapper">
+    <resultMap id="findSong" type="xyz.qcbyt.entity.Song">
+        <id column="id" property="id"/>
+        <result column="musicname" property="musicname"/>
+        <result column="singerid" property="singerid"/>
+        <result column="songwriter" property="songwriter"/>
+        <result column="composer" property="composer"/>
+        <result column="reltime" property="reltime"/>
+        <result column="coverimg" property="coverimg"/>
+        <result column="mp3src" property="mp3src"/>
+        <result column="lrcid" property="lrcid"/>
+        <result column="likestatus" property="likestatus"/>
+        <result column="duration" property="duration"/>
+
+        <association property="lrc" javaType="xyz.qcbyt.entity.Lrc">
+            <id column="id" property="id"/>
+            <result column="lrc" property="lrc"/>
+            <result column="lrcpath" property="lrcpath"/>
+        </association>
+
+        <association property="singer" javaType="xyz.qcbyt.entity.Singer">
+            <id column="id" property="id"/>
+            <result column="singer" property="singer"/>
+            <result column="profile" property="profile"/>
+            <result column="sex" property="sex"/>
+        </association>
+
+        <association property="language" javaType="xyz.qcbyt.entity.Language">
+            <id column="id" property="id"/>
+            <result column="language" property="language"/>
+        </association>
+        <association property="scene" javaType="xyz.qcbyt.entity.Scene">
+            <id column="id" property="id"/>
+            <result column="scene" property="scene"/>
+        </association>
+        <association property="emotion" javaType="xyz.qcbyt.entity.Emotion">
+            <id column="id" property="id"/>
+            <result column="emotion" property="emotion"/>
+        </association>
+        <association property="topic" javaType="xyz.qcbyt.entity.Topic">
+            <id column="id" property="id"/>
+            <result column="topic" property="topic"/>
+        </association>
+    </resultMap>
+
+    <select id="SelectAll" resultMap="findSong">
+        select * from song s left JOIN
+                      lrc l on s.lrcid=l.id left JOIN
+                      singer si on s.singerid=si.id LEFT JOIN
+                      language_type lan on s.languageid=lan.id LEFT JOIN
+                      scene_type sce on s.sceneid=sce.id LEFT JOIN
+                      emotion_type emo on s.emotionid=emo.id LEFT JOIN
+                      topic_type top on s.topicid=top.id
+    </select>
+
+    <select id="Selectone" resultMap="findSong">
+
+            select * from song s left JOIN
+            lrc l on s.lrcid=l.id left JOIN
+            singer si on s.singerid=si.id left JOIN
+            language_type lan on s.languageid=lan.id left JOIN
+            scene_type sce on s.sceneid=sce.id left JOIN
+            emotion_type emo on s.emotionid=emo.id left JOIN
+            topic_type top on s.topicid=top.id
+            where s.id=#{id}
+
+<!--        <if test="lrcid==null">-->
+<!--            select * from song s left JOIN lrc l on s.lrcid=l.id left JOIN singer si on s.singerid=si.id where s.id=#{id}-->
+<!--        </if>-->
+    </select>
+
+<!--    将歌曲插入到审核页-->
+    <insert id="addSongToAudit" parameterType="xyz.qcbyt.entity.Song">
+        insert into auditmusic
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="musicname !=null and musicname!=''">
+                musicname,
+            </if>
+            <if test="singerid !=null and singerid!=''">
+                singerid,
+            </if>
+            <if test="songwriter !=null and songwriter!=''">
+                songwriter,
+            </if>
+            <if test="composer !=null and composer!=''">
+                composer,
+            </if>
+            <if test="reltime !=null ">
+                reltime,
+            </if>
+            <if test="coverimg !=null and coverimg!=''">
+                coverimg,
+            </if>
+            <if test="mp3src !=null and mp3src!=''">
+                mp3src,
+            </if>
+            <if test="lrcid !=null and lrcid!=''">
+                lrcid,
+            </if>
+            <if test="auditstatus !=null and auditstatus!=''">
+                auditstatus,
+            </if>
+            <if test="userid !=null and userid!=''">
+                userid,
+            </if>
+            <if test="duration !=null and duration!=''">
+                duration,
+            </if>
+            <if test="languageid !=null and languageid!=''">
+                languageid,
+            </if>
+            <if test="sceneid !=null and sceneid!=''">
+                sceneid,
+            </if>
+            <if test="emotionid !=null and emotionid!=''">
+                emotionid,
+            </if>
+            <if test="topicid !=null and topicid!=''">
+                topicid,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="musicname !=null and musicname!=''">
+                #{musicname},
+            </if>
+            <if test="singerid !=null and singerid!=''">
+                #{singerid},
+            </if>
+            <if test="songwriter !=null and songwriter!=''">
+                #{songwriter},
+            </if>
+            <if test="composer !=null and composer!=''">
+                #{composer},
+            </if>
+            <if test="reltime !=null ">
+                #{reltime},
+            </if>
+            <if test="coverimg !=null and coverimg!=''">
+                #{coverimg},
+            </if>
+            <if test="mp3src !=null and mp3src!=''">
+                #{mp3src},
+            </if>
+            <if test="lrcid !=null and lrcid!=''">
+                #{lrcid},
+            </if>
+            <if test="auditstatus !=null and auditstatus!=''">
+                #{auditstatus},
+            </if>
+            <if test="userid !=null and userid!=''">
+                #{userid},
+            </if>
+            <if test="duration !=null and duration!=''">
+                #{duration},
+            </if>
+            <if test="languageid !=null and languageid!=''">
+                #{languageid},
+            </if>
+            <if test="sceneid !=null and sceneid!=''">
+                #{sceneid},
+            </if>
+            <if test="emotionid !=null and emotionid!=''">
+                #{emotionid},
+            </if>
+            <if test="topicid !=null and topicid!=''">
+                #{topicid},
+            </if>
+        </trim>
+    </insert>
+</mapper>

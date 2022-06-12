@@ -3,6 +3,7 @@ package xyz.qcbyt.utils;
 import ch.qos.logback.core.util.FileUtil;
 import it.sauronsoftware.jave.Encoder;
 import it.sauronsoftware.jave.MultimediaInfo;
+import org.apache.commons.io.FileUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.util.ResourceUtils;
@@ -25,7 +26,8 @@ public class FileUploadUtil {
         long duration = 0;
         try {
             File source = new File(getFilePath() + file.getOriginalFilename());
-            file.transferTo(source);
+//            file.transferTo(source);//报错！！！！不要用
+            FileUtils.copyInputStreamToFile(file.getInputStream(), source);
             Encoder encoder = new Encoder();
             MultimediaInfo info = encoder.getInfo(source);
             duration = info.getDuration();

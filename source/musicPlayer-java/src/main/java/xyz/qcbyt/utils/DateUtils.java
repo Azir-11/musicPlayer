@@ -12,10 +12,10 @@ public class DateUtils {
         return format.replace(" ", "").replace(":","").replace("-","");
 
     }
-    public static String getDate(String format){
+    public static String getDate(String format,Date date1){
         Date date=new Date();
         SimpleDateFormat dateFormat=new SimpleDateFormat(format);
-        return dateFormat.format(date);
+        return dateFormat.format(date1);
 
     }
 }

@@ -1,5 +1,9 @@
 package xyz.qcbyt.controller;
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 import xyz.qcbyt.entity.User;
 import xyz.qcbyt.service.UserService;
@@ -8,9 +12,10 @@ import javax.validation.Valid;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-@CrossOrigin("*")
+@CrossOrigin
 @RestController
 @RequestMapping("/reg")
+@Transactional
 public class UserController {
     @Autowired
     private UserService service;
@@ -18,8 +23,6 @@ public class UserController {
     @PostMapping("/register")
     public Result register( @RequestBody @Valid User user){
         if(service.register(user)!=null){ //如果没注册过，才让注册
-            service.createLove(user.getUsername()+"_love");     //根据用户名创建一个 个人喜欢的表
-            service.createPlaylist(user.getUsername()+"_playlist"); //根据用户名创建一个 歌单
             return Result.succ(200,"注册成功");
         }
        return Result.fail(400,"注册失败,用户名已存在");
@@ -55,5 +58,18 @@ public class UserController {
         }
         return Result.fail("无数据记录");
     }
+
+    @RequiresAuthentication
+    @GetMapping("/logout")
+    public Object logout() {
+        //在这里执行退出系统前需要清空的数据
+        Subject subject = SecurityUtils.getSubject();
+        if(subject.isAuthenticated()) {
+            subject.logout();
+        }
+        System.out.println("退出登录成功");
+        return Result.succ("退出登录");
+    }
+
 }
 

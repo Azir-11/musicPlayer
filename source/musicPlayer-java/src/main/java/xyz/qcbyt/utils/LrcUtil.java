@@ -31,24 +31,42 @@ public class LrcUtil {
                 InputStreamReader reader = new InputStreamReader(new FileInputStream(file), encoding);
                 BufferedReader bufferedReader = new BufferedReader(reader);
                 //时间标签正则匹配 例：[02:34.94]
-                String regex = "\\[(\\d{1,2}):(\\d{1,2}).(\\d{1,2})\\]";
+//                String regex = "\\[(\\d{1,2}):(\\d{1,2}).(\\d{1,2})\\]";
+                String regex = "\\[(\\d{1,2}):(\\d{1,2}).(\\d{1,2})]";
+                String regex1 = "\\[(\\d{1,2}):(\\d{1,2}).(\\d{1,3})]";
                 //创建pattern对象
                 Pattern pattern = Pattern.compile(regex);
+                Pattern pattern1 = Pattern.compile(regex1);
                 //每次读取一行字符串
                 String lineStr = null;
                 while ((lineStr = bufferedReader.readLine()) != null) {
                     Matcher matcher = pattern.matcher(lineStr);
-                    while (matcher.find()) {
+                    Matcher matcher1 = pattern1.matcher(lineStr);
+//                    while (matcher.find() ) {
+//                        //存储当前时间和文字的容器
+//                        Map<String, String> hashMap = new HashMap<>();
+//                        //分钟
+//                        String min = matcher.group(1);
+//                        //秒
+//                        String second = matcher.group(2);
+//                        //毫秒
+//                        String mill = matcher.group(3);
+//                        String time = min + ":" + second + "." + mill;
+//                        String text = lineStr.substring(matcher.end());
+//                        hashMap.put(time, text);
+//                        list.add(hashMap);
+//                    }
+                    while (matcher1.find()) {
                         //存储当前时间和文字的容器
                         Map<String, String> hashMap = new HashMap<>();
                         //分钟
-                        String min = matcher.group(1);
+                        String min = matcher1.group(1);
                         //秒
-                        String second = matcher.group(2);
+                        String second = matcher1.group(2);
                         //毫秒
-                        String mill = matcher.group(3);
+                        String mill = matcher1.group(3);
                         String time = min + ":" + second + "." + mill;
-                        String text = lineStr.substring(matcher.end());
+                        String text = lineStr.substring(matcher1.end());
                         hashMap.put(time, text);
                         list.add(hashMap);
                     }
@@ -87,12 +105,4 @@ public class LrcUtil {
         return s;
     }
 
-//    public static void main(String[] args) {
-//        String path="src\\main\\resources\\static\\lrc\\七里香_歌词.lrc";
-//        LrcUtil lrc = new LrcUtil();
-//        List<Map<String, String>> lrc1 = lrc.getLrc(path);
-//
-//        JSON.toJSONString(lrc1);
-//        System.out.println(lrc1);
-//    }
 }

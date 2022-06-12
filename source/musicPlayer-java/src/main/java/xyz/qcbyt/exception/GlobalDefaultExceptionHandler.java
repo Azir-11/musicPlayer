@@ -2,6 +2,7 @@ package xyz.qcbyt.exception;
 
 import lombok.extern.slf4j.Slf4j;
 import org.apache.shiro.ShiroException;
+import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.UnauthorizedException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -18,7 +19,10 @@ import org.springframework.web.servlet.mvc.support.DefaultHandlerExceptionResolv
 import xyz.qcbyt.utils.Result;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.validation.ConstraintViolation;
+import javax.validation.ConstraintViolationException;
 import java.util.Objects;
+import java.util.Set;
 
 
 /**
@@ -43,6 +47,12 @@ public class GlobalDefaultExceptionHandler {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     public Result handler(ShiroException e) {
         return Result.fail(e.getMessage());
+    }
+
+    @ResponseBody
+    @ExceptionHandler(AuthorizationException.class)
+    public String AuthorizationException(Exception ex) {
+        return "权限认证失败";
     }
 
     //@Vaild 数据校验异常
@@ -78,7 +88,14 @@ public class GlobalDefaultExceptionHandler {
         logger.error("前端传空对象了", e);
         return Result.fail(400,"莫传空文件");
     }
-
+    @ResponseStatus(HttpStatus.BAD_REQUEST)
+    @ExceptionHandler(ConstraintViolationException.class)
+    public Result defaultErrorHandler(ConstraintViolationException e) {
+        Set<ConstraintViolation<?>> violations = e.getConstraintViolations();
+        ConstraintViolation<?> violation = violations.iterator().next();
+        log.info("数据验证异常：{}", violation.getMessage());
+        return Result.fail(violation.getMessage());
+    }
 
 //    @ExceptionHandler(DefaultHandlerExceptionResolver.class)
 //    public Result DefaultHandlerExceptionResolver(DefaultHandlerExceptionResolver e) {
