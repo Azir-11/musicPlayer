@@ -33,9 +33,5 @@ public interface UserMapper {
     @Update("update user set totallogin=#{totallogin},recentlogin=#{recentlogin} where id=#{id}")
     Integer updateRecentLogin(Integer id,Integer totallogin,Date recentlogin);
 
-    //用户注册的时候创建一个用户喜欢的表
-    void createLove(@Param("tablename") String tablename);
 
-    //创建一个歌单
-    Integer createPlaylist(@Param("tablename")String tablename);
 }

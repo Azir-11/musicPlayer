@@ -3,24 +3,24 @@ package xyz.qcbyt.entity;
 import com.fasterxml.jackson.annotation.JsonFormat;
 
 import java.util.Date;
+import java.util.List;
 
 /**
  *  个人喜欢表 实体类
  */
 public class FavMusic {
     private Integer id;
-    @JsonFormat(pattern = "yyyy-MM-dd")
-    private Date lovemoment;
-    private Integer musicid;
+    private String coverimg;
+    private List<Integer> musiclist;
     private Integer userid;
 
     public FavMusic() {
     }
 
-    public FavMusic(Integer id, Date lovemoment, Integer musicid, Integer userid) {
+    public FavMusic(Integer id, String coverimg, List<Integer> musiclist, Integer userid) {
         this.id = id;
-        this.lovemoment = lovemoment;
-        this.musicid = musicid;
+        this.coverimg = coverimg;
+        this.musiclist = musiclist;
         this.userid = userid;
     }
 
@@ -32,20 +32,20 @@ public class FavMusic {
         this.id = id;
     }
 
-    public Date getLovemoment() {
-        return lovemoment;
+    public String getCoverimg() {
+        return coverimg;
     }
 
-    public void setLovemoment(Date lovemoment) {
-        this.lovemoment = lovemoment;
+    public void setCoverimg(String coverimg) {
+        this.coverimg = coverimg;
     }
 
-    public Integer getMusicid() {
-        return musicid;
+    public List<Integer> getMusiclist() {
+        return musiclist;
     }
 
-    public void setMusicid(Integer musicid) {
-        this.musicid = musicid;
+    public void setMusiclist(List<Integer> musiclist) {
+        this.musiclist = musiclist;
     }
 
     public Integer getUserid() {
@@ -60,8 +60,8 @@ public class FavMusic {
     public String toString() {
         return "FavMusic{" +
                 "id=" + id +
-                ", lovemoment=" + lovemoment +
-                ", musicid=" + musicid +
+                ", coverimg='" + coverimg + '\'' +
+                ", musiclist=" + musiclist +
                 ", userid=" + userid +
                 '}';
     }

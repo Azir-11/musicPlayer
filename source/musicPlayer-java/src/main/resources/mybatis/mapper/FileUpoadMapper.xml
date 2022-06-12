@@ -3,6 +3,8 @@
         PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
         "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <!-- namespace为命名空间，应该是mapper接口的全称-->
-<mapper namespace="xyz.qcbyt.mapper.UserMapper">
+<mapper namespace="xyz.qcbyt.mapper.FileUploadMapper">
+<!--    文件上传的 对象属性 动态输入  (上传到审核页)-->
+
 
 </mapper>

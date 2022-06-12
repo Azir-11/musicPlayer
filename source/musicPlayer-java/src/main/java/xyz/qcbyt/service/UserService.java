@@ -22,9 +22,5 @@ public interface UserService {
     //登录的时候更新用户最近一次登录时间
     Integer updateTotalLoginDay(Integer id,Integer totallogin,Date recentlogin);
 
-    //用户注册的时候创建一个用户喜欢的表
-    Integer createLove(String tablename);
 
-    //创建一个歌单
-    Integer createPlaylist(String tablename);
 }

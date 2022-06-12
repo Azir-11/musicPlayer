@@ -2,10 +2,14 @@ package xyz.qcbyt.shiro.realm;
 
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
 import xyz.qcbyt.service.UserService;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class UserRealm extends AuthorizingRealm {
     @Autowired
@@ -14,7 +18,14 @@ public class UserRealm extends AuthorizingRealm {
     //授权
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principalCollection) {
-        return null;
+        String username=(String) getAvailablePrincipal(principalCollection);
+        SimpleAuthorizationInfo info = new SimpleAuthorizationInfo();
+        if(username.equals("admin")){
+            Set<String> r = new HashSet<String>();
+            r.add("admin");
+            info.setRoles(r);
+        }
+        return info;
     }
 
     //认证

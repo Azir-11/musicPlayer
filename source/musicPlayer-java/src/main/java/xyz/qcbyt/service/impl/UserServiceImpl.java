@@ -106,21 +106,5 @@ public class UserServiceImpl implements UserService {
         return userMapper.updateRecentLogin(id, totallogin, recentlogin);
     }
 
-    @Override
-    public Integer createLove(String tablename){
-        if (tablename!=null && !tablename.equals("")) {
-            userMapper.createLove(tablename);
-            return 1;
-        }
-        return 0;
-    }
-    @Override
-    public Integer createPlaylist(String tablename){
-        if (tablename!=null && !tablename.equals("")){
-            userMapper.createPlaylist(tablename);
-            return 1;
-        }
-        return 0;
-    }
 
 }

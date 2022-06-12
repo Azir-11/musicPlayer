@@ -1,5 +1,4 @@
 package xyz.qcbyt.shiro;
-
 import org.apache.shiro.spring.LifecycleBeanPostProcessor;
 import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
@@ -17,10 +16,8 @@ import xyz.qcbyt.shiro.realm.UserRealm;
 import javax.servlet.Filter;
 import java.util.LinkedHashMap;
 import java.util.Map;
-
 @Configuration
 public class ShiroConfig  {
-
     @Bean
     public ShiroFilterFactoryBean shiroFilterFactoryBean(@Qualifier("defaultWebSecurityManager") DefaultWebSecurityManager securityManager){
         ShiroFilterFactoryBean shiroFilter=new ShiroFilterFactoryBean();
@@ -40,13 +37,13 @@ public class ShiroConfig  {
          * role: 拥有某个权限才能访问
          */
         Map<String,String> filters=new LinkedHashMap<>();
-        filters.put("/reg/**","anon");
-        filters.put("/reg/loginout","authc");
+        filters.put("/reg/login","anon");   //登录注册放行
+        filters.put("/reg/register","anon");
         filters.put("/static/**","anon");
+//        filters.put("/**","authc");
         shiroFilter.setFilterChainDefinitionMap(filters);
         return shiroFilter;
     }
-
 
     @Bean(name = "defaultWebSecurityManager")
     public DefaultWebSecurityManager securityManager(@Qualifier("userRealm") UserRealm userRealm){
