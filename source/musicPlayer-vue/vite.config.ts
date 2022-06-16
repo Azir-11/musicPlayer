@@ -13,9 +13,20 @@ export default defineConfig({
   Components({
     resolvers: [ElementPlusResolver()],
   }),],
-  resolve: {
-    alias: {
-      '@': fileURLToPath(new URL('./src', import.meta.url))
+  server: {
+    proxy: {
+      '/api': {
+        target: 'http://localhost:8089/',
+        changeOrigin: true,
+        rewrite: (path) => path.replace(/^\/api/, '') // 不可以省略rewrite
+      }
     }
+  },
+
+  resolve: {
+  alias: {
+    '@': fileURLToPath(new URL('./src', import.meta.url))
   }
+}
 })
+

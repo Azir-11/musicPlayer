@@ -9,7 +9,9 @@
   },
   "dependencies": {
     "@element-plus/icons-vue": "^1.1.4",
+    "axios": "^0.27.2",
     "element-plus": "^2.2.2",
+    "music-metadata": "^7.12.3",
     "pinia": "^2.0.13",
     "vue": "^3.2.33",
     "vue-router": "^4.0.14"
