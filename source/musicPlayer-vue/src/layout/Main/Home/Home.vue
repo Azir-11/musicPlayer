@@ -1,13 +1,13 @@
 <template  >
    <!-- 主页 -->
     <span class="left">
+    
         <!-- 歌词部分 -->
         <div class="profile">
             <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
                 <li v-for="(item, index) in count" class="infinite-list-item" :class="index == 0 ? 'Song_title' : ''">
                     {{ item }}</li>
             </ul>
-
         </div>
         <!-- 播放器 -->
         <div class="Player">
@@ -25,6 +25,8 @@
 import Player from "./componet/Player.vue";
 import { ref } from 'vue'
 import Function from './componet/Function.vue'
+import { useRoute } from "vue-router";
+// const route=useRoute()
 
 const count = ref(0)
 const load = () => {

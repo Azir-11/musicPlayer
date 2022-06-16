@@ -1,4 +1,6 @@
 <template>
+<!-- 搜索 -->
+<Inquire></Inquire>
     <!-- 设置下拉菜单 -->
     <el-dropdown trigger="click">
         <span class="el-dropdown-link">
@@ -22,6 +24,7 @@
 import { Tools } from '@element-plus/icons-vue'
 import { useRouter } from "vue-router";
 import { ref } from 'vue';
+import Inquire from '../../compoenet/Inquire.vue';
 const router=useRouter()
 // 通过token 判断有无登录
 let WhetherToLogIn=()=>{

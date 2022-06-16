@@ -15,10 +15,27 @@
             <span class="shou" @click="forgetpas">已有账户密码/登录</span>
           </div>
           <hr />
-          <el-form-item prop="username" label="用户名">
+          <el-form-item prop="name" label="姓名">
+            <el-input v-model="user.name" placeholder="请输入姓名" clearable></el-input>
+          </el-form-item>
+          <el-form-item prop="sex" label="性别">
+            <el-radio-group v-model="user.sex" class="ml-4">
+              <el-radio label="男" size="large">男</el-radio>
+              <el-radio label="女" size="large">女</el-radio>
+            </el-radio-group>
+          </el-form-item>
+          <el-form-item prop="phone" label="电话号码">
+            <el-input
+              v-model.number="user.phone"
+              type="text"
+              placeholder="请输入电话号码"
+              clearable
+            ></el-input>
+          </el-form-item>
+          <el-form-item prop="username" label="用户账号">
             <el-input
               v-model="user.username"
-              placeholder="请输入用户名"
+              placeholder="请输入账号"
               clearable
             ></el-input>
           </el-form-item>
@@ -41,9 +58,9 @@
               clearable
             />
           </el-form-item>
-          <!-- <el-form-item label="个人简介" prop="desc">
-      <el-input v-model="user.desc" type="textarea" />
-    </el-form-item> -->
+          <el-form-item label="个人简介" prop="profile">
+            <el-input v-model="user.profile" type="textarea" />
+          </el-form-item>
           <el-form-item>
             <el-button type="primary" icon @click="doRegister(ruleFormRef)"
               >注册账号</el-button
@@ -59,17 +76,20 @@
 import { reactive, ref } from "vue";
 import type { FormInstance } from "element-plus";
 import { useRouter } from "vue-router";
-import {  posts } from "@/utils/api";
+import { posts } from "@/utils/api";
 import { onMounted } from "vue";
 const router = useRouter();
 
 const ruleFormRef = ref<FormInstance>();
 const user = reactive({
-  username: "",
+  name:"",
+  sex:"男",
+  phone:"",
+ username :"",
   email: "",
   password: "",
   checkPass: "",
-  desc: '"☾只要是你腻歪，那歪腻一辈子"',
+  profile: '"☾只要是你腻歪，那歪腻一辈子"',
 });
 // 注册
 
@@ -97,6 +117,10 @@ const validatePass2 = (rule: any, value: any, callback: any) => {
 };
 //rule
 const rules = reactive({
+   name: [
+    { required: true, message: "请输入用户名", trigger: "blur" },
+    {min:3, max: 15, message: "姓名至少3不超过15位!", trigger: "blur" },
+  ],
   username: [
     { required: true, message: "请输入用户名", trigger: "blur" },
     { max: 10, message: "用户名不超过10位!", trigger: "blur" },
@@ -117,7 +141,18 @@ const rules = reactive({
     },
     { min: 15, max: 20, message: "请输入正确的电子邮件地址", trigger: "blur" },
   ],
+  profile :[
+    { required: false,  trigger: "blur" },
+    { max: 30, message: "简介不超过30位!", trigger: "blur" },
+  ],
+  phone:[
+        { required: true,message: '请输入正确的电话号码'  },
+        { type:"number", min:10000000000,
+      max: 99999999999,message: '电话号码11位' },
+      ]
 });
+  
+
 
 //提交注册
 const doRegister = (formEl: FormInstance | undefined) => {
@@ -126,10 +161,15 @@ const doRegister = (formEl: FormInstance | undefined) => {
     if (valid) {
       // 注册
       posts("reg/register", {
+        name:user.name,
+        sex:user.sex,
+        phone:user.phone,
         username: user.username,
         password: user.password,
         email: user.email,
+        profile:user.profile
       }).then((res: any) => {
+        console.log(res)
         alert(res.msg);
       });
     } else {
@@ -137,7 +177,7 @@ const doRegister = (formEl: FormInstance | undefined) => {
       console.log("error submit!");
       return false;
     }
-  });
+  });      
 };
 // 已有账户密码
 const forgetpas = () => {
@@ -158,8 +198,8 @@ const forgetpas = () => {
   /* background: url("../assets/images/login_bg.png") no-repeat; */
   background-size: cover;
   width: 400px;
-  height: 400px;
-  margin: 180px auto;
+  height: 600px;
+  margin: 64px auto;
   overflow: hidden;
   padding-top: 10px;
   line-height: 40px;
