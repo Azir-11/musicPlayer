@@ -1,19 +1,14 @@
 import { defineStore } from 'pinia'
 import { ElMessage } from 'element-plus'
-const open1 = () => {
+const open1 = (val:string) => {
   ElMessage({
     duration: 3000,
     showClose: true,
-    message: '没有歌曲啦！已从头开始播放！',
+    message:val ,
   })
 }
-const open2 = () => {
-  ElMessage({
-    duration: 3000,
-    showClose: true,
-    message: '到顶啦！已从尾部开始播放！',
-  })
-}
+
+
 //普通数据
 export const useCounterStore = defineStore({
   id: 'counter',
@@ -40,10 +35,13 @@ export const useCounterStore = defineStore({
 const usermincounter = useCounterStore()
 //路由跳转 
 export const useTokenStore = defineStore({
+
   id: 'Token',
+
   state: () => ({
     counter: 1,
     Token: "",
+    authority: 0,
   }),
   getters: {
     doubleCount: (state) => state.counter * 2,
@@ -67,7 +65,7 @@ export const useMusicStore = defineStore({
   }),
   getters: {
     doubleCount: (state) => state.counter * 2,
-    playersrc: (state) => { return state.musicIndex != -1 ? state.musicList[state.musicIndex].songurl : state.musicSrc }
+    playersrc: (state) => { return state.musicIndex != -1 ? state.musicList[state.musicIndex].mp3src : state.musicSrc }
   },
   actions: {
     increment() {
@@ -97,30 +95,37 @@ export const useMusicStore = defineStore({
     },
     /**下一首 */
     NextSong() {
-      if (this.musicIndex < this.musicList.length - 1) {
-        this.musicIndex++
-        console.log(2222);
+      if (this.musicIndex != -1) {
+        if (this.musicIndex < this.musicList.length - 1) {
+          this.musicIndex++
+          console.log(2222);
 
-      } else {
-        this.musicIndex = 0
-        console.log(8888);
-        open1()
+        } else {
+          this.musicIndex = 0
+          console.log(8888);
+          open1('没有歌曲啦！已从头开始播放！')
 
+        }
+      }else{
+        open1('请先选歌曲！！')
       }
     }
     ,
     /**上一首 */
     Last() {
-if(this.musicIndex !=0){
-  this.musicIndex--
+      if (this.musicIndex != -1) {
+      if (this.musicIndex != 0) {
+        this.musicIndex--
 
-}
-else {
-  this.musicIndex = this.musicList.length - 1
-  console.log(8888);
-  open2()
+      }
+      else {
+        this.musicIndex = this.musicList.length - 1
+        console.log(8888);
+        open1('到顶啦！已从尾部开始播放')
 
-}
+      }}else{
+        open1('请先选歌曲！！')
+      }
     }
 
   }

@@ -16,4 +16,5 @@ display: flex;
   transform: translateX(-5%);
   align-items: center;
 }
+
 </style>

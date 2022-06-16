@@ -1,9 +1,9 @@
 <template>
   <!-- 底部播放功能 利用element ui-->
-  
+
   <audio
     ref="audio"
-    :src="useMusicmin.playersrc"
+    :src="'http://localhost/' + useMusicmin.playersrc"
     @canplay="getDuration"
     @timeupdate="updateTime"
     @pause="minPause"
@@ -18,20 +18,30 @@
   <div class="TwoMajorModules">
     <div class="left">
       <div class="function">
-        <el-button color="#626aef" :icon="SortDown" @click="useMusicmin.Last" plain></el-button>
-        <el-icon
-          @click="Videopause"
-          :style="mincounter.$state.isvisble ? 'color:deeppink;display:block' : 'display: none'"
-        >
-          <VideoPause />
-        </el-icon>
-        <el-icon
-          :style="mincounter.$state.isvisble ? 'display:none' : mincounter.$state.musicStyle"
-          @click="Videoplay"
-        >
-          <VideoPlay />
-        </el-icon>
-        <el-button color="#626aef" :icon="SortUp"   @click="useMusicmin.NextSong" plain></el-button>
+        <el-icon class="hover" @click="useMusicmin.Last"><Back /></el-icon>
+        <!-- <el-button color="#626aef" :icon="SortDown" @click="useMusicmin.Last" plain></el-button> -->
+        <div style="height: 20.5px; margin: 0 20px">
+          <el-icon
+            @click="Videopause"
+            :style="
+              mincounter.$state.isvisble
+                ? 'color:deeppink;display:block'
+                : 'display: none'
+            "
+          >
+            <VideoPause />
+          </el-icon>
+          <el-icon
+            :style="
+              mincounter.$state.isvisble ? 'display:none' : mincounter.$state.musicStyle
+            "
+            @click="Videoplay"
+          >
+            <VideoPlay />
+          </el-icon>
+        </div>
+        <el-icon class="hover" @click=" useMusicmin.NextSong"><Right /></el-icon>
+        <!-- <el-button color="#626aef" :icon="SortUp"  @click="useMusicmin.NextSong"  plain></el-button> -->
       </div>
       <!-- 进度条 -->
       <div class="Progress">
@@ -137,16 +147,17 @@ import {
   Smoking,
   NoSmoking,
 } from "@element-plus/icons-vue";
-import { ref, onBeforeUnmount ,onMounted} from "vue";
+import { ref, onBeforeUnmount, onMounted } from "vue";
 import { useCounterStore, useMusicStore } from "@/stores/counter";
+import { Back, Right } from "@element-plus/icons-vue";
 
-let Funtionstyle=ref('display:block')
+let Funtionstyle = ref("display:block");
 const mincounter = useCounterStore();
 const useMusicmin = useMusicStore();
 let music = ref(useMusicmin.$state.musicSrc);
-onMounted(()=>{
-  audio.value.load()
-})
+onMounted(() => {
+  audio.value.load();
+});
 // dom 操作
 
 const audio = ref();
@@ -158,7 +169,7 @@ const audio = ref();
  */
 let Time = ref();
 let volume = ref();
-let src="@/../public/那就晚安.mp3"
+let src = "@/../public/那就晚安.mp3";
 const getDuration = () => {
   // 总时长audion;
   Time.value = audio.value.duration;
@@ -198,15 +209,13 @@ const TimeFilter = (time: any) => {
 const Videoplay = () => {
   // 如果src为空就点不了
   console.log(6666, useMusicmin.playersrc);
-  if (useMusicmin.playersrc!= "") {
+  if (useMusicmin.playersrc != "") {
     audio.value.play();
     mincounter.$state.isvisble = true;
     console.log(mincounter.$state.isvisble);
-   
   } else {
-      // color:deeppink;
+    // color:deeppink;
     mincounter.$state.isvisble = false;
-    
   }
 };
 
@@ -293,7 +302,7 @@ const minError = (error: any) => {
 /**
  * @ended 当前播放列表为结束时产生该事件
  */ const minended = (res: any) => {
-  console.log(11111,frequency.value);
+  console.log(11111, frequency.value);
   switch (frequency.value) {
     case 1: {
       useMusicmin.ListCycle();
@@ -311,8 +320,10 @@ const minError = (error: any) => {
       break;
     }
 
-    case 3:{   useMusicmin.RandomCirculation()
-      break;}
+    case 3: {
+      useMusicmin.RandomCirculation();
+      break;
+    }
   }
 };
 /**
@@ -336,7 +347,6 @@ const mindurationchange = () => {
   display: flex;
   align-items: center;
   justify-content: center;
-
 }
 .el-icon {
   border-radius: 100%;
@@ -380,5 +390,13 @@ const mindurationchange = () => {
 .Progress {
   flex: 1;
   padding-left: 10%;
+}
+.hover {
+  width: 22px;
+  height: 28;
+}
+.hover :hover {
+  cursor: pointer;
+  color: #626aef;
 }
 </style>

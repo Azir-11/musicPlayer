@@ -83,6 +83,7 @@ const remenber = (data: any) => {
   checked.value = data;
   if (checked.value) {
     localStorage.setItem("news", JSON.stringify(form));
+   
   } else {
     localStorage.removeItem("news");
   }
@@ -107,13 +108,18 @@ const login = () => {
   })
     .then((res: any) => {
       if ((res.code = 200)) {
+        console.log(res)
+        //权限判定是否显示审核为1
+      sessionStorage.setItem("role", res.data.role);
         alert(res.msg);
         sessionStorage.setItem("Token", res.data.token);
+          sessionStorage.setItem("userId", res.data.id);
         console.log(2222222,  res.data);
         router.push({
           path: "/home",
+          query:{role:res.data.role}
         });
-         sessionStorage.setItem("userID", res.data.id);
+        
       } else {
         alert(res.msg);
       }

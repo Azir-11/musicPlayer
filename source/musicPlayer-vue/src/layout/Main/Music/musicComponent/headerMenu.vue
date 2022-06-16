@@ -24,7 +24,6 @@ const route = (path: string, data: string, ) => {
 }
 const changes=(index:number, src:string)=>{
     num.value=index 
-  
     route(src,'display:none')
 }
 
