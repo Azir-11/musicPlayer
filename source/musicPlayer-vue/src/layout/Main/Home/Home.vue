@@ -4,10 +4,7 @@
     
         <!-- 歌词部分 -->
         <div class="profile">
-            <ul v-infinite-scroll="load" class="infinite-list" style="overflow: auto">
-                <li v-for="(item, index) in count" class="infinite-list-item" :class="index == 0 ? 'Song_title' : ''">
-                    {{ item }}</li>
-            </ul>
+           <Lyrics></Lyrics>
         </div>
         <!-- 播放器 -->
         <div class="Player">
@@ -26,12 +23,10 @@ import Player from "./componet/Player.vue";
 import { ref } from 'vue'
 import Function from './componet/Function.vue'
 import { useRoute } from "vue-router";
+import Lyrics from "./componet/lyrics.vue";
 // const route=useRoute()
 
-const count = ref(0)
-const load = () => {
-    count.value += 2
-}
+
 </script>
     
 <style scoped>
@@ -113,8 +108,6 @@ const load = () => {
     margin: 10px;
     font-size: 30px !important;
     font-weight: 700;
-
-
 }
 
 

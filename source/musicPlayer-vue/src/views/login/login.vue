@@ -107,11 +107,11 @@ const login = () => {
     'password': form.password,
   })
     .then((res: any) => {
-      if ((res.code = 200)) {
-        console.log(res)
+    
+       alert(res.msg);
         //权限判定是否显示审核为1
       sessionStorage.setItem("role", res.data.role);
-        alert(res.msg);
+        
         sessionStorage.setItem("Token", res.data.token);
           sessionStorage.setItem("userId", res.data.id);
         console.log(2222222,  res.data);
@@ -119,13 +119,10 @@ const login = () => {
           path: "/home",
           query:{role:res.data.role}
         });
-        
-      } else {
-        alert(res.msg);
-      }
+      
     })
     .catch((error) => {
-      console.log(error);
+      console.log(2222,error);
     });
 };
 //注册

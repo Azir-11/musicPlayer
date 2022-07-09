@@ -40,7 +40,7 @@
             <VideoPlay />
           </el-icon>
         </div>
-        <el-icon class="hover" @click=" useMusicmin.NextSong"><Right /></el-icon>
+        <el-icon class="hover" @click="useMusicmin.NextSong"><Right /></el-icon>
         <!-- <el-button color="#626aef" :icon="SortUp"  @click="useMusicmin.NextSong"  plain></el-button> -->
       </div>
       <!-- 进度条 -->
@@ -147,20 +147,22 @@ import {
   Smoking,
   NoSmoking,
 } from "@element-plus/icons-vue";
-import { ref, onBeforeUnmount, onMounted } from "vue";
-import { useCounterStore, useMusicStore } from "@/stores/counter";
+import { ref, onBeforeUnmount, onMounted, watch } from "vue";
+import { useCounterStore, useMusicStore, useLyrics } from "@/stores/counter";
 import { Back, Right } from "@element-plus/icons-vue";
 
-let Funtionstyle = ref("display:block");
+// let Funtionstyle = ref("display:block");
+const useLyricsmin = useLyrics();
 const mincounter = useCounterStore();
 const useMusicmin = useMusicStore();
-let music = ref(useMusicmin.$state.musicSrc);
+// let music = ref(useMusicmin.$state.musicSrc);
 onMounted(() => {
   audio.value.load();
 });
 // dom 操作
 
 const audio = ref();
+
 /**
  * 在canplay（浏览器可以开始播放该音视频）钩子函数回调中访问duration属性可获得（注：在dom挂载完直接获取duration会返回NaN）
  * @param
@@ -168,18 +170,27 @@ const audio = ref();
  * audio.value.duration 音频总时常
  */
 let Time = ref();
-let volume = ref();
-let src = "@/../public/那就晚安.mp3";
+// let volume = ref();
+// let src = "@/../public/那就晚安.mp3";
 const getDuration = () => {
   // 总时长audion;
+  useMusicmin.$state.audio = audio.value; //dom,共享
   Time.value = audio.value.duration;
 };
 
 // 获取播放当前时间
 // @timeupdate事件在里面获取当前事件
 let nowTime = ref();
+let flag: boolean = true; // 判断当前高亮的索引是否已经超过了歌词数组的长度
+let scrollHeight: number = 0; // 歌词区域要滚动的高度
+let lyricHeight: number = 0; // 歌词区域最外层区域高度，也就是lyricDiv的高度
+let lyricDomArr: any = null;
+
 let updateTime = (res: any) => {
   nowTime.value = audio.value.currentTime;
+
+  //达到时间就滚动//歌词下一行
+  RollingLyrics(audio.value.currentTime);
   /**
    *
    * audio.value.currentTime 是实时字节更新时间
@@ -187,7 +198,35 @@ let updateTime = (res: any) => {
    * */
   DynamicValue.value = (audio.value.currentTime / Time.value) * 100;
 };
-
+const RollingLyrics = (currentTime: any) => {
+  //歌词滚动
+  //加个for循环加快移动跟踪歌词
+  for (let i = 0; i < useLyricsmin.$state.newmusicLrc.length; i++) {
+    if (
+      flag &&
+      useLyricsmin.$state.newmusicLrc[useLyricsmin.$state.idx].time < currentTime
+    ) {
+      //获取当前歌词位置
+      lyricDomArr = useLyricsmin.$state.Lyr.querySelectorAll("li");
+      console.log(22222, lyricDomArr[useLyricsmin.$state.idx].offsetHeight); //
+      // let lyricDomArr = useLyricsmin.$state.Lyr.querySelectorAll("div");
+      scrollHeight =
+        useLyricsmin.$state.idx * (useLyricsmin.$state.Lyr.offsetHeight / 5) -
+        (useLyricsmin.$state.Lyr.offsetHeight / 5) * 2;
+      //换歌歌词初始化
+      useLyricsmin.$state.lyricIndex++; //高亮歌词
+      useLyricsmin.$state.idx++; //下标
+      useLyricsmin.$state.Lyr.scrollTop = scrollHeight;
+      //解决歌结尾没有歌词的报错
+      if (useLyricsmin.$state.idx > useLyricsmin.$state.newmusicLrc.length) {
+        flag = false;
+        return;
+      }
+    } else {
+      return;
+    }
+  }
+};
 // 获取时间是秒数：过滤
 // 将整数转换成 时：分：秒的格式
 const TimeFilter = (time: any) => {
@@ -208,7 +247,7 @@ const TimeFilter = (time: any) => {
 // useMusicmin.$state.musicSrc= ""
 const Videoplay = () => {
   // 如果src为空就点不了
-  console.log(6666, useMusicmin.playersrc);
+  console.log(6666, useMusicmin.$state.audio);
   if (useMusicmin.playersrc != "") {
     audio.value.play();
     mincounter.$state.isvisble = true;
@@ -241,6 +280,8 @@ const formatTooltip = (val: number) => {
 
 let changeCurrentTime = () => {
   audio.value.currentTime = (DynamicValue.value / 100) * Time.value;
+  useLyricsmin.$state.lyricIndex = -1; //高亮歌词
+  useLyricsmin.$state.idx = 0; //下标
   console.log(audio.value.currentTime);
   console.log(3333, DynamicValue.value);
 };
@@ -337,6 +378,7 @@ const mindurationchange = () => {
 <style scoped>
 .TwoMajorModules {
   display: flex;
+  height: 100%;
 }
 .left {
   flex: 8;

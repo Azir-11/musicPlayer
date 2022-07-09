@@ -8,6 +8,7 @@ declare module '@vue/runtime-core' {
     ElAside: typeof import('element-plus/es')['ElAside']
     ElAutocomplete: typeof import('element-plus/es')['ElAutocomplete']
     ElAutoResizer: typeof import('element-plus/es')['ElAutoResizer']
+    ElAvatar: typeof import('element-plus/es')['ElAvatar']
     ElBotton: typeof import('element-plus/es')['ElBotton']
     ElButton: typeof import('element-plus/es')['ElButton']
     ElCheckbox: typeof import('element-plus/es')['ElCheckbox']

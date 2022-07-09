@@ -14,16 +14,24 @@
 <script setup lang='ts'>
 import { VideoPlay, VideoPause } from '@element-plus/icons-vue'
 import { ref } from 'vue'
-import {useCounterStore} from '@/stores/counter'
+import {useCounterStore,useMusicStore} from '@/stores/counter'
 const mincounter=useCounterStore()
+const useMusicmin=useMusicStore()
 // 播放
 
 const Videoplay = () => {
-   mincounter.$state.isvisble =true
+   
+   if(useMusicmin.$state.musicSrc==''){
+mincounter.$state.isvisble =false
+   }else{
+       mincounter.$state.isvisble =true
+       useMusicmin.$state.audio.play()
+   }
      console.log(mincounter.$state.isvisble);
 }
 // 暂停
 const Videopause = () => {
+     useMusicmin.$state.audio.pause()
     mincounter.$state.isvisble = false
 }
 </script>
