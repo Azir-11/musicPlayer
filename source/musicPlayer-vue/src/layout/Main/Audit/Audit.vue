@@ -27,6 +27,13 @@
         </div>
       </template>
     </el-table-column>
+      <el-table-column label="封面" width="300" style="z-index: 4 !important">
+      <template #default="scope"  >
+        <div class="demo-image__preview">
+         <audio style="width: 215px !important;" :src="'http://localhost/'+ ReviewSong[scope.$index].mp3src" controls ></audio>
+        </div>
+      </template>
+    </el-table-column>
     <el-table-column
       class="lrc"
       prop="lrc.lrc"
@@ -46,7 +53,7 @@
           link
           type="primary"
           size="small"
-          @click.prevent="ispass(scope.$index, true)"
+          @click.prevent="ispass(scope.$index, scope.row.id, true)"
         >
           通过
         </el-button>
@@ -54,7 +61,7 @@
           link
           type="primary"
           size="small"
-          @click.prevent="ispass(scope.$index, false)"
+          @click.prevent="ispass(scope.$index,scope.row.id, false)"
         >
           不通过
         </el-button>
@@ -64,26 +71,55 @@
 </template>
 
 <script setup lang="ts">
-import { get, posts } from "@/utils/api";
+import { get, post } from "@/utils/api";
 import { reactive, ref } from "vue";
+import { ElMessage } from 'element-plus'
+import { useRouter } from "vue-router";
+const router=useRouter()
+
+const route = (path: string, data: string) => {
+  router.push({
+    path: path,
+    query: {
+      data: data,
+    },
+  });
+};
+const open1 = (msg:string) => {
+  ElMessage({
+    duration: 3000,
+    showClose: true,
+    message: msg,
+  })
+}
 //放大预览
 let srcList = ref([]) as any;
 //审核歌曲的数据
-let ReviewSong = ref("") as any;
+let ReviewSong = ref([]) as any;
+
 
 // 获取审核歌曲的数据
 const getReviewSong = () => {
   get("audit/findAll")
     .then((res: any) => {
       if (res != "权限认证失败") {
-        ReviewSong.value = res.data;
-        console.log(222222222, ReviewSong.value);
+       console.log(222222222,res);
+      res.data.forEach((element:any) => {
+        //如果audtime不为空就是审核过的
+        if(element.audtime==null){
+        ReviewSong.value.push(element)
+          console.log(222222222,element);
+        }
+        
+      });
+        
         for (let i = 0; i < ReviewSong.value.length; i++) {
           srcList.value.push("http://localhost/" + ReviewSong.value[i].coverimg);
         }
       } else {
         alert(res + "-已过期请重新登陆");
       }
+
     })
     .catch((error: any) => {
       console.log(error);
@@ -97,7 +133,21 @@ const isvisble = (val: boolean) => {
   Visble.value = val;
 };
 // 是否通过
-const ispass = (index: number, ispass: boolean) => {};
+const ispass = (index: number, rows:any, ispass: boolean) => {
+ if(confirm('确定吗？')){
+   console.log(rows)
+  post(`/audit/auditmusic?id=${rows}&auditstatus=${ispass}`).then((res:any)=>{
+  // open1(res.data)
+  console.log(res)
+ ReviewSong.value.splice(index,1)
+
+  }).catch((error:any)=>{
+    console.log(222,error)
+  })
+ 
+ }
+
+};
 </script>
 
 <style scoped>

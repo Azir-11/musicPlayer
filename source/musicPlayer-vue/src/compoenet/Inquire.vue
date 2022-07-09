@@ -9,7 +9,7 @@
   >
     <template #suffix>
       <el-icon class="el-input__icon" @click="handleIconClick(state)">
-        <edit />
+        <Search />
       </el-icon>
     </template>
     <template #default="{ item }">
@@ -21,7 +21,7 @@
 
 <script lang="ts" setup>
 import { onMounted, ref } from "vue";
-import { Edit } from "@element-plus/icons-vue";
+import { Search } from "@element-plus/icons-vue";
 import axios from "axios";
 
 /**

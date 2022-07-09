@@ -14,6 +14,7 @@
 <script setup lang='ts'>
 import Waveform from "./waveform.vue";
 
+
 </script>
     
 <style scoped>

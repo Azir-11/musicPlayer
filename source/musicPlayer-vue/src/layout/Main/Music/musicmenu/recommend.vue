@@ -15,13 +15,14 @@
         <el-icon
           @click="like(scope.$index, scope.row)"
           class="Eleme"
-          :style="MusicList[scope.$index].likestatus ? 'display:none' : 'display:block'"
+          :style="MusicList[scope.$index].like_id ? 'display:none' : 'display:block'"
           ><Eleme
         /></el-icon>
+        <!-- MusicList[scope.$index].likestatus  -->
         <el-icon
           class="Eleme"
           @click="islike(scope.$index, scope.row)"
-          :style="MusicList[scope.$index].likestatus ? 'display:block' : 'display:none'"
+          :style="MusicList[scope.$index].like_id ? 'display:block' : 'display:none'"
           ><ElemeFilled
         /></el-icon>
       </template>
@@ -40,20 +41,20 @@
     <el-table-column prop="musicname" label="音乐标题" width="120" />
     <el-table-column prop="reltime" label="歌手" width="120" />
     <el-table-column prop="musicname" label="专辑" width="120" />
-    <el-table-column prop="duration" label="专辑" width="120" />
+    <el-table-column prop="duration" label="时长" width="120" />
   </el-table>
 </template>
 
 <script lang="ts" setup>
-import {  get,  } from "@/utils/api";
+import { get, posts } from "@/utils/api";
 import { Eleme, ElemeFilled } from "@element-plus/icons-vue";
-import { ref,computed } from "vue";
-import { useMusicStore, useCounterStore } from "@/stores/counter";
+import { ref, computed } from "vue";
+import { useMusicStore, useCounterStore, useLyrics } from "@/stores/counter";
 const useMusicmun = useMusicStore();
 const useCountmin = useCounterStore();
+const useLyricsmin = useLyrics();
 let num = ref();
 let MusicList: any = ref([]);
-
 
 /**过滤时间
  *
@@ -71,53 +72,134 @@ const TimeFilter = (time: any) => {
     return "0:00:00";
   }
 };
-// /musicList/love
-const like = (index: number, value: any) => {
-  console.log(index, value);
 
-  MusicList.value[index].likestatus = true;
-};
-const islike = (index: number, value: any) => {
-  console.log(index, value);
-  MusicList.value[index].likestatus = false;
-};
-/**
- * 点击播放
- */
-const player = (index: number, value: any) => {
-  //   返回当前歌曲的index下标
-  useMusicmun.$state.musicIndex = index;
-  //   返回当前歌曲 的src
-  useMusicmun.$state.musicSrc = MusicList.value[index].mp3src;
-
-  console.log(1111, useMusicmun.$state.musicSrc);
-  // 播放icon样式
-  useCountmin.$state.isvisble = false;
-  //  播放icon样式
-  useCountmin.$state.musicStyle = "";
-
-};
-
-// 获取推荐数据列表
-const getMusicList = () => {
-  get("musicList/findAll")
+//用来增加或者取消喜欢
+const UpdateLikes = (like_ids: any) => {
+  posts("musicList/updateMylove", {
+    id: sessionStorage.getItem("userId"),
+    musiclist: `${like_ids}`,
+  })
     .then((res: any) => {
-      console.log(res);
-
-      MusicList.value = res.data;
-      console.log(MusicList.value)
-      MusicList.value.forEach((item:any)=>{
-        // console.log(item)
-        item.duration=TimeFilter(item.duration);
-      })
-  //  console.log(MusicList.value.duration);
-      useMusicmun.$state.musicList = MusicList.value;
+      console.log(res, 666);
     })
     .catch((error: any) => {
       console.log(error);
     });
 };
-getMusicList();
+
+let like_id: number[] = [];
+
+//获取用户喜欢的列表
+const getLikeList = () => {
+  let like_ID2 = ref([]);
+  get(`musicList/findAllLove?id=${sessionStorage.getItem("userId")}&pageNum=1&pageSize=5`)
+    .then((res: any) => {
+      if (res.data.musiclist != "") {
+        like_ID2.value = res.data.musiclist.split(",");
+        like_ID2.value.forEach((item: any) => {
+          console.log(1111111, item);
+                    like_id.push(parseInt(item));
+        });
+         console.log(1111111, like_id);
+      }
+    })
+    .catch((error: any) => {
+      console.log(error);
+    });
+};
+getLikeList();
+// 获取推荐数据列表
+const getMusicList = async () => {
+  get("musicList/findAll")
+    .then((res: any) => {
+      console.log(res);
+      MusicList.value = res.data;
+      // console.log(MusicList.value);
+    res.data.forEach((item: any) => {
+        // console.log(item)
+        for (let i = 0; i < like_id.length; i++) {
+          if (item.id === like_id[i]) {
+            item["like_id"] = like_id[i];
+          }
+        }
+        item.duration = TimeFilter(item.duration);
+      });
+      console.log(MusicList.value);
+      //  console.log(MusicList.value.duration);
+      // useMusicmun.$state.musicList = MusicList.value;
+    })
+    .catch((error: any) => {
+      console.log(error);
+    });
+};
+
+setTimeout(() => {
+  getMusicList();
+}, 200);
+
+
+// /musicList/love
+const like = (index: number, value: any) => {
+  // console.log(555555, index, value.id);
+  like_id.push(value.id);
+  console.log(like_id);
+  UpdateLikes(like_id);
+  getMusicList(); //重新获取
+};
+const islike = (index: number, value: any) => {
+  console.log(index, value);
+  let like_id2: number[] = [];
+  like_id2 = like_id;
+  like_id = [];
+  like_id2.forEach((element) => {
+    // console.log(2222, element, value.id);
+    if (element != value.id) {
+      like_id.push(element);
+    }
+  });
+  // console.log(3, like_id);
+  UpdateLikes(like_id);
+  getMusicList(); //重新获取
+};
+
+//写歌词，获取这首歌的数据
+const getlric = (id: number) => {
+  get("musicList/findAll?id=" + id + "")
+    .then((res: any) => {
+      console.log(333, res.data.lrc);
+      useLyricsmin.$state.musicLrc = res.data.lrc;
+      useLyricsmin.Initialization(); //换个清空上一首push的值
+      //解析歌词时间与值
+      useLyricsmin.LyricsTraversal();
+    })
+    .catch((error: any) => {
+      console.log(error);
+    });
+};
+
+/**
+ * 点击播放
+ */
+
+const player = (index: number, value: any) => {
+  //   返回当前歌曲的index下标
+   useMusicmun.$state.musicList = MusicList.value; //主要控制列表
+  useMusicmun.$state.musicIndex = index;
+  //   返回当前歌曲 的src
+  useMusicmun.changeMusicSrc(MusicList.value[index].mp3src)
+  console.log(useMusicmun.$state.musicSrc)
+  console.log(1111, useMusicmun.$state.musicSrc);
+  // 播放icon样式
+  useCountmin.$state.isvisble = false;
+  //  播放icon样式
+  useCountmin.$state.musicStyle = "";
+  getlric(value.id);
+
+  //换歌歌词初始化
+  useLyricsmin.$state.lyricIndex = -1; //高亮歌词
+  useLyricsmin.$state.idx = 0; //下标
+};
+
 // 假数据
 
 // const FakeData=ref([{

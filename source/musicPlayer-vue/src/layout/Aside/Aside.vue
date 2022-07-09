@@ -28,10 +28,6 @@
       <li v-if="role=='1'" @click="route('/audit', 'display:none')">
         <el-icon><View /></el-icon>审核
       </li>
-
-    
-
-
   </ul>
   <!-- 3个球 -->
   <ul class="ball">
